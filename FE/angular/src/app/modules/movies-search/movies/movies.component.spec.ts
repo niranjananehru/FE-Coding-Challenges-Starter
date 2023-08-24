@@ -1,8 +1,8 @@
 import { mockProvider, Spectator } from '@ngneat/spectator';
 import { createComponentFactory } from '@ngneat/spectator/jest';
 import { of } from 'rxjs';
-import { DataService } from '../../services/data.service';
 import { MoviesComponent } from './movies.component';
+import { DataService } from 'src/app/services/data.service';
 
 const mockDecades = [2000];
 const mockMovies = [
