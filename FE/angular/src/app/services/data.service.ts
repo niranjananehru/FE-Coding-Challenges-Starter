@@ -1,11 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, isDevMode } from '@angular/core';
-import { forkJoin, Observable, of, throwError } from 'rxjs';
+import { forkJoin, Observable, of } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 
 interface SearchResults {
   Response: string;
-  Search: Movie[];
+  Movies: Movie[];
   totalResults: string;
 }
 
@@ -34,7 +34,7 @@ export interface MovieComplete extends MovieDetails {
 
 export interface MovieData {
   Decades: number[];
-  Search: MovieComplete[];
+  Movies: MovieComplete[];
 }
 
 @Injectable({
@@ -45,9 +45,10 @@ export class DataService {
   private posterUrl = 'https://m.media-amazon.com/images/M/';
   private replacePosterUrl = '/assets/images/';
   private serviceUrl = 'https://www.omdbapi.com/?apikey=f59b2e4b&';
-  private storedMovies: MovieData = { Search: [], Decades: [] };
+  private storedMovies: MovieData = { Movies: [], Decades: [] };
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+  }
 
   public getFilteredMovies(movies: MovieComplete[], decade?: number): MovieComplete[] {
     if (!decade) {
@@ -79,12 +80,12 @@ export class DataService {
   }
 
   public getMovies(): Observable<MovieData> {
-    if (this.storedMovies && this.storedMovies.Search.length) {
+    if (this.storedMovies && this.storedMovies.Movies.length) {
       return of(this.storedMovies);
     }
 
     return this.http.get<SearchResults>(`${this.serviceUrl}s=Batman&type=movie`).pipe(
-      mergeMap(({ Search }) =>
+      mergeMap(({ Movies: Search }) =>
         forkJoin(
           Search.map(({ imdbID, Year }) => {
             // add decade to decades
@@ -100,7 +101,7 @@ export class DataService {
       map((Search) => {
         Search = Search.sort(({ Year: year1 }: MovieComplete, { Year: year2 }: MovieComplete) => year1 - year2);
         this.decades.sort((a, b) => a - b);
-        this.storedMovies = { Search, Decades: this.decades };
+        this.storedMovies = { Movies: Search, Decades: this.decades };
 
         return this.storedMovies;
       })
