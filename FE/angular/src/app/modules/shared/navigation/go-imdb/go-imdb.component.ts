@@ -7,9 +7,10 @@ export const imdbBaseLink = 'https://www.imdb.com/title/';
   templateUrl: './go-imdb.component.html'
 })
 export class GoImdbComponent {
-  @Input() public imdbId: string;
+  @Input() public imdbId: string | undefined;
 
-  public navigateTo(id: string) {
-    window.open(imdbBaseLink + id, 'imdbWindow');
+  public navigateTo(id: string | undefined) {
+    if(id)
+      window.open(imdbBaseLink + id, 'imdbWindow');
   }
 }

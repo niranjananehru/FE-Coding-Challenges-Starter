@@ -1,14 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { tap, first } from 'rxjs';
-import { DataService, MovieComplete } from '../../services/data.service';
+import { DataService, MovieComplete } from 'src/app/services/data.service';
 
 @Component({
   selector: 'app-movie',
   templateUrl: './movie.component.html'
 })
 export class MovieComponent implements OnDestroy, OnInit {
-  public movie: MovieComplete | undefined;
+  public movie: MovieComplete;
   public movieId : string | null = '';
 
   constructor(private activatedRoute: ActivatedRoute, private dataService: DataService) {}
@@ -18,7 +18,8 @@ export class MovieComponent implements OnDestroy, OnInit {
     this.dataService.getMovies().pipe(
       first(),
       tap(data => { 
-        this.movie = data.Movies.find(srch => srch.imdbID === this.movieId);
+        const movie = data.Movies.find(srch => srch.imdbID === this.movieId);
+        this.movie = movie as MovieComplete;
       })
     ).subscribe();
   }
