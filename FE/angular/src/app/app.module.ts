@@ -12,7 +12,7 @@ import { NavigationService } from './modules/shared/navigation/navigation.servic
   declarations: [
     AppComponent
   ],
-  imports: [SharedModule,MoviesSearchModule,BrowserModule, AppRoutingModule, HttpClientModule],
+  imports: [BrowserModule, AppRoutingModule, HttpClientModule,SharedModule,MoviesSearchModule],
   providers: [DataService, NavigationService],
   bootstrap: [AppComponent]
 })

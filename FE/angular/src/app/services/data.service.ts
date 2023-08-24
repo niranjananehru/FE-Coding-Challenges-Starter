@@ -5,7 +5,7 @@ import { catchError, map, mergeMap } from 'rxjs/operators';
 
 interface SearchResults {
   Response: string;
-  Movies: Movie[];
+  Search: Movie[];
   totalResults: string;
 }
 
@@ -85,7 +85,7 @@ export class DataService {
     }
 
     return this.http.get<SearchResults>(`${this.serviceUrl}s=Batman&type=movie`).pipe(
-      mergeMap(({ Movies: Search }) =>
+      mergeMap(({ Search: Search }) =>
         forkJoin(
           Search.map(({ imdbID, Year }) => {
             // add decade to decades

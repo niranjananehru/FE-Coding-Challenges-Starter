@@ -4,6 +4,7 @@ import { GoBackComponent } from './navigation/go-back/go-back.component';
 import { GoDetailsComponent } from './navigation/go-details/go-details.component';
 import { GoImdbComponent } from './navigation/go-imdb/go-imdb.component';
 import { DecadesComponent } from './navigation/decades/decades.component';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
     declarations: [
@@ -13,12 +14,16 @@ import { DecadesComponent } from './navigation/decades/decades.component';
         GoImdbComponent,
         DecadesComponent
     ],
+    imports: [
+        CommonModule
+    ],
     exports: [
         SidebarComponent,
         GoBackComponent,
         GoDetailsComponent,
         GoImdbComponent,
-        DecadesComponent
+        DecadesComponent,
+        CommonModule
     ]
 })
 export class SharedModule {}
