@@ -2,7 +2,7 @@
   <button
     *ngFor="let link of links; let index = index"
     (click)="onClick(link, index)"
-    class="nav"
+    class="decade-nav"
     [class.active]="link.isActive"
   >
     {{ link.label }}
