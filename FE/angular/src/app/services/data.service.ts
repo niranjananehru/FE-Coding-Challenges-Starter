@@ -1,41 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { forkJoin, Observable, of } from 'rxjs';
-import { map, mergeMap } from 'rxjs/operators';
-
-interface SearchResults {
-  Response: string;
-  Search: Movie[];
-  totalResults: string;
-}
-
-interface Movie {
-  imdbID: string;
-  Poster: string;
-  Title: string;
-  Type: string;
-  Year: string | number;
-}
-
-interface MovieDetails extends Movie {
-  Actors: string;
-  Director: string;
-  Genre: string;
-  Plot: string;
-  Rated: string;
-  Released: string;
-  Runtime: string;
-  Writer: string;
-}
-
-export interface MovieComplete extends MovieDetails {
-  Year: number;
-}
-
-export interface MovieData {
-  Decades: number[];
-  Search: MovieComplete[];
-}
+import { catchError, map, mergeMap } from 'rxjs/operators';
+import { MovieComplete, MovieData, MovieDetails, SearchResults } from '../models/data.model';
 
 @Injectable({
   providedIn: 'root'
@@ -74,7 +41,11 @@ export class DataService {
         Type,
         Writer,
         Year: parseInt(Year as string)
-      }))
+      })),
+      catchError((err, caught) => {
+        console.error(`Something Bad happened`, err);
+        return of({} as MovieComplete);
+      })
     );
   }
 
@@ -103,6 +74,10 @@ export class DataService {
         this.storedMovies = { Search: Search, Decades: this.decades };
 
         return this.storedMovies;
+      }),
+      catchError((err, caught) => {
+        console.error(`Something Bad happened`, err);
+        return of(this.storedMovies);
       })
     );
   }
