@@ -4,6 +4,7 @@ import { createComponentFactory } from '@ngneat/spectator/jest';
 import { MovieComponent } from './movie.component';
 import { DataService } from '../../../services/data.service';
 import { of } from 'rxjs';
+import { NavigationService } from '../../shared/navigation/navigation.service';
 
 const mockActivatedRoute = mockProvider(ActivatedRoute, {
   snapshot: {
@@ -50,6 +51,12 @@ const mockGetMovies = jest.fn().mockReturnValue(of({ Decades: mockDecades, Searc
 const mockDataService = mockProvider(DataService, {
   getMovies: mockGetMovies
 });
+const mockGoTo = jest.fn();
+const mockNavigationService = mockProvider(NavigationService, {
+  goTo: mockGoTo
+});
+
+let mockWindow: jest.SpyInstance;
 
 describe('MovieComponent', () => {
   let spectator: Spectator<MovieComponent>;
@@ -58,7 +65,7 @@ describe('MovieComponent', () => {
     component: MovieComponent,
     imports: [],
     declarations: [],
-    providers: [mockActivatedRoute, mockDataService],
+    providers: [mockActivatedRoute, mockDataService, mockNavigationService],
     shallow: true,
     detectChanges: false
   });
@@ -82,4 +89,24 @@ describe('MovieComponent', () => {
     component.ngOnInit();
     expect(component.movie).toBe(mockMovies[0]);
   });
+
+  describe('navigateTo - Go Back', () => {
+    beforeEach(() => {
+      component.navigateTo();
+    });
+    test('should call navigateService.goTo', () => {
+      expect(mockGoTo).toBeCalledWith('/');
+    });
+  });
+
+  describe('navigateTo', () => {
+    beforeEach(() => {
+      mockWindow = jest.spyOn(window as any, 'open').mockImplementationOnce(() => undefined);
+      component.navigateToImdb('tt1234');
+    });
+    test('should call window.open', () => {
+      expect(mockWindow).toBeCalledWith(component.imdbBaseLink + 'tt1234', 'imdbWindow');
+    });
+  });
+
 });

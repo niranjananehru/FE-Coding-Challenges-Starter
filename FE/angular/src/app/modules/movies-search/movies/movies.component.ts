@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { tap, first } from 'rxjs';
 import { DataService } from '../../../services/data.service';
 import { MovieComplete } from 'src/app/models/data.model';
+import { NavigationService } from '../../shared/navigation/navigation.service';
 
 @Component({
   selector: 'app-movies',
@@ -13,7 +14,7 @@ export class MoviesComponent implements OnInit {
   public filteredMovies: MovieComplete[] = [];
   public movies: MovieComplete[] = [];
 
-  constructor(private dataService: DataService) {}
+  constructor(private dataService: DataService, private navigationService: NavigationService) {}
 
   public ngOnInit(): void {
     this.dataService
@@ -37,5 +38,9 @@ export class MoviesComponent implements OnInit {
 
     this.currDecade = decade;
     this.filteredMovies = this.dataService.getFilteredMovies(this.movies, decade);
+  }
+
+  public navigateToMovieDetail(id: string) {
+    this.navigationService.goTo('/movie', id);
   }
 }

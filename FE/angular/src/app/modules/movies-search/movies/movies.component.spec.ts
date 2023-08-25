@@ -4,6 +4,7 @@ import { of } from 'rxjs';
 import { MoviesComponent } from './movies.component';
 import { DataService } from '../../../services/data.service';
 import { async } from '@angular/core/testing';
+import { NavigationService } from '../../shared/navigation/navigation.service';
 
 const mockDecades = [2000];
 const mockMovies = [
@@ -47,6 +48,10 @@ const mockDataService = mockProvider(DataService, {
   getMovies: mockGetMovies,
   getFilteredMovies: mockGetFilteredMovies
 });
+const mockGoTo = jest.fn();
+const mockNavigationService = mockProvider(NavigationService, {
+  goTo: mockGoTo
+});
 
 describe('MovieComponent', () => {
   let spectator: Spectator<MoviesComponent>;
@@ -55,7 +60,7 @@ describe('MovieComponent', () => {
     component: MoviesComponent,
     imports: [],
     declarations: [],
-    providers: [mockDataService],
+    providers: [mockDataService, mockNavigationService],
     shallow: true,
     detectChanges: false
   });
@@ -98,6 +103,15 @@ describe('MovieComponent', () => {
     component.movies = [];
     component.displayMovies();
     expect(component.filteredMovies).toEqual([]);
+  });
+
+  describe('navigateToMovieDetail', () => {
+    beforeEach(() => {
+      component.navigateToMovieDetail('tt1234');
+    });
+    test('should call navigateService.goTo', () => {
+      expect(mockGoTo).toBeCalledWith('/movie', 'tt1234');
+    });
   });
 
 });

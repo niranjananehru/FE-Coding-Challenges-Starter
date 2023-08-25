@@ -3,6 +3,8 @@ import { ActivatedRoute } from '@angular/router';
 import { tap, first } from 'rxjs';
 import { DataService } from '../../../services/data.service';
 import { MovieComplete } from 'src/app/models/data.model';
+import { BaseLink } from '../../shared/sidebar/sidebar.component';
+import { NavigationService } from '../../shared/navigation/navigation.service';
 
 @Component({
   selector: 'app-movie',
@@ -11,8 +13,19 @@ import { MovieComplete } from 'src/app/models/data.model';
 export class MovieComponent implements OnInit {
   public movie: MovieComplete;
   public movieId: string | null = '';
+  public links: BaseLink[] = [
+    {
+      label: 'Go Back',
+      isActive: true
+    }
+  ];
+  public imdbBaseLink = 'https://www.imdb.com/title/';
 
-  constructor(private activatedRoute: ActivatedRoute, private dataService: DataService) {}
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private dataService: DataService,
+    private navigationService: NavigationService
+  ) {}
 
   public ngOnInit() {
     this.movieId = this.activatedRoute.snapshot.paramMap.get('id');
@@ -26,5 +39,13 @@ export class MovieComponent implements OnInit {
         })
       )
       .subscribe();
+  }
+
+  public navigateTo() {
+    this.navigationService.goTo('/');
+  }
+
+  public navigateToImdb(id: string) {
+    if (id) window.open(this.imdbBaseLink + id, 'imdbWindow');
   }
 }
