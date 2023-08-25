@@ -4,7 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
   {
     path: '',
-    loadChildren: () => import('./modules/movies-search/movies-search.module').then(m => m.MoviesSearchModule)
+    loadChildren: () => import('./modules/movies-search/movies-search.module').then((m) => m.MoviesSearchModule)
   }
 ];
 

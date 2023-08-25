@@ -15,14 +15,17 @@ export class MoviesComponent implements OnInit {
   constructor(private dataService: DataService) {}
 
   public ngOnInit(): void {
-    this.dataService.getMovies().pipe(
-      first(),
-      tap((data) => {
-        this.decades = data.Decades;
-        this.movies = data.Search;
-        this.displayMovies();
-      })
-    ).subscribe();
+    this.dataService
+      .getMovies()
+      .pipe(
+        first(),
+        tap((data) => {
+          this.decades = data.Decades;
+          this.movies = data.Search;
+          this.displayMovies();
+        })
+      )
+      .subscribe();
   }
 
   public displayMovies(decade?: number): void {

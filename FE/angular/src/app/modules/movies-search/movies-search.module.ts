@@ -5,13 +5,7 @@ import { MoviesSearchRoutingModule } from './movies-search-routing.module';
 import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
-    declarations: [
-        MoviesComponent,
-        MovieComponent
-    ],
-    imports: [
-        MoviesSearchRoutingModule,
-        SharedModule
-    ]
+  declarations: [MoviesComponent, MovieComponent],
+  imports: [MoviesSearchRoutingModule, SharedModule]
 })
 export class MoviesSearchModule {}

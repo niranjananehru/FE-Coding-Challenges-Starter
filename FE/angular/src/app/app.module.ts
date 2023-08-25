@@ -9,10 +9,8 @@ import { SharedModule } from './modules/shared/shared.module';
 import { NavigationService } from './modules/shared/navigation/navigation.service';
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
-  imports: [BrowserModule, AppRoutingModule, HttpClientModule,SharedModule,MoviesSearchModule],
+  declarations: [AppComponent],
+  imports: [BrowserModule, AppRoutingModule, HttpClientModule, SharedModule, MoviesSearchModule],
   providers: [DataService, NavigationService],
   bootstrap: [AppComponent]
 })

@@ -10,7 +10,6 @@ export class GoImdbComponent {
   @Input() public imdbId: string | undefined;
 
   public navigateTo(id: string | undefined) {
-    if(id)
-      window.open(imdbBaseLink + id, 'imdbWindow');
+    if (id) window.open(imdbBaseLink + id, 'imdbWindow');
   }
 }

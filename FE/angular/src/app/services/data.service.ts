@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, isDevMode } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { forkJoin, Observable, of } from 'rxjs';
-import { catchError, map, mergeMap } from 'rxjs/operators';
+import { map, mergeMap } from 'rxjs/operators';
 
 interface SearchResults {
   Response: string;
@@ -47,8 +47,7 @@ export class DataService {
   private serviceUrl = 'https://www.omdbapi.com/?apikey=f59b2e4b&';
   private storedMovies: MovieData = { Search: [], Decades: [] };
 
-  constructor(private http: HttpClient) {
-  }
+  constructor(private http: HttpClient) {}
 
   public getFilteredMovies(movies: MovieComplete[], decade?: number): MovieComplete[] {
     if (!decade) {
