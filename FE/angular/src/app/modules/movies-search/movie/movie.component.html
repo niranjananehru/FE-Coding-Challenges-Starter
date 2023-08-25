@@ -1,4 +1,4 @@
-<app-go-back></app-go-back>
+<app-sidebar [links]="links" (linkClicked)="navigateTo()"></app-sidebar>
 
 <ul *ngIf="movie" class="movie">
   <li class="grid grid-bleed">
@@ -31,7 +31,7 @@
         {{ movie.Plot }}
       </div>
       <div class="nav flex-footer">
-        <app-go-imdb [imdbId]="movie.imdbID"></app-go-imdb>
+        <button (click)="navigateToImdb(movie.imdbID)" class="imdb">View on IMDB</button>
       </div>
     </div>
   </li>

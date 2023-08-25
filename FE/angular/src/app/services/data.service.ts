@@ -1,41 +1,8 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, isDevMode } from '@angular/core';
-import { forkJoin, Observable, of, throwError } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { forkJoin, Observable, of } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
-
-interface SearchResults {
-  Response: string;
-  Search: Movie[];
-  totalResults: string;
-}
-
-interface Movie {
-  imdbID: string;
-  Poster: string;
-  Title: string;
-  Type: string;
-  Year: string | number;
-}
-
-interface MovieDetails extends Movie {
-  Actors: string;
-  Director: string;
-  Genre: string;
-  Plot: string;
-  Rated: string;
-  Released: string;
-  Runtime: string;
-  Writer: string;
-}
-
-export interface MovieComplete extends MovieDetails {
-  Year: number;
-}
-
-export interface MovieData {
-  Decades: number[];
-  Search: MovieComplete[];
-}
+import { MovieComplete, MovieData, MovieDetails, SearchResults } from '../models/data.model';
 
 @Injectable({
   providedIn: 'root'
@@ -74,7 +41,11 @@ export class DataService {
         Type,
         Writer,
         Year: parseInt(Year as string)
-      }))
+      })),
+      catchError((err, caught) => {
+        console.error(`Something Bad happened`, err);
+        return of({} as MovieComplete);
+      })
     );
   }
 
@@ -84,7 +55,7 @@ export class DataService {
     }
 
     return this.http.get<SearchResults>(`${this.serviceUrl}s=Batman&type=movie`).pipe(
-      mergeMap(({ Search }) =>
+      mergeMap(({ Search: Search }) =>
         forkJoin(
           Search.map(({ imdbID, Year }) => {
             // add decade to decades
@@ -100,9 +71,13 @@ export class DataService {
       map((Search) => {
         Search = Search.sort(({ Year: year1 }: MovieComplete, { Year: year2 }: MovieComplete) => year1 - year2);
         this.decades.sort((a, b) => a - b);
-        this.storedMovies = { Search, Decades: this.decades };
+        this.storedMovies = { Search: Search, Decades: this.decades };
 
         return this.storedMovies;
+      }),
+      catchError((err, caught) => {
+        console.error(`Something Bad happened`, err);
+        return of(this.storedMovies);
       })
     );
   }

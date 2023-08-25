@@ -21,7 +21,7 @@
         {{ movie.Plot }}
       </div>
       <div class="nav flex-footer">
-        <app-go-details [imdbId]="movie.imdbID"></app-go-details>
+        <button (click)="navigateToMovieDetail(movie.imdbID)" class="detail">View Details</button>
       </div>
     </div>
   </li>

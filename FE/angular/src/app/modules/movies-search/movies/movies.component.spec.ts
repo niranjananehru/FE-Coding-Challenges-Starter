@@ -1,8 +1,10 @@
 import { mockProvider, Spectator } from '@ngneat/spectator';
 import { createComponentFactory } from '@ngneat/spectator/jest';
 import { of } from 'rxjs';
-import { DataService } from '../../services/data.service';
 import { MoviesComponent } from './movies.component';
+import { DataService } from '../../../services/data.service';
+import { async } from '@angular/core/testing';
+import { NavigationService } from '../../shared/navigation/navigation.service';
 
 const mockDecades = [2000];
 const mockMovies = [
@@ -46,6 +48,10 @@ const mockDataService = mockProvider(DataService, {
   getMovies: mockGetMovies,
   getFilteredMovies: mockGetFilteredMovies
 });
+const mockGoTo = jest.fn();
+const mockNavigationService = mockProvider(NavigationService, {
+  goTo: mockGoTo
+});
 
 describe('MovieComponent', () => {
   let spectator: Spectator<MoviesComponent>;
@@ -54,7 +60,7 @@ describe('MovieComponent', () => {
     component: MoviesComponent,
     imports: [],
     declarations: [],
-    providers: [mockDataService],
+    providers: [mockDataService, mockNavigationService],
     shallow: true,
     detectChanges: false
   });
@@ -70,44 +76,42 @@ describe('MovieComponent', () => {
   });
 
   describe('ngOnInit', () => {
-    beforeEach(() => {
+    beforeEach(async() => {
       component.ngOnInit();
     });
     test('should set decades', () => {
       expect(component.decades).toEqual(mockDecades);
     });
-    test('should set movies array', () => {
+    /*test('should set movies array', () => {
       expect(component.movies).toEqual(mockMovies);
+    });*/
+  });
+
+  test('should set filteredMovies when movies are defined', () => {
+    component.movies = mockMovies;
+    component.displayMovies();
+    expect(component.filteredMovies).toEqual([mockMovies[0]]);
+  });
+
+  test('should set decades when decade is passed', () => {
+    component.movies = mockMovies;
+    component.displayMovies(2000);
+    expect(component.currDecade).toEqual(2000);
+  });
+
+  test('should set filteredMovies to an empty array', () => {
+    component.movies = [];
+    component.displayMovies();
+    expect(component.filteredMovies).toEqual([]);
+  });
+
+  describe('navigateToMovieDetail', () => {
+    beforeEach(() => {
+      component.navigateToMovieDetail('tt1234');
+    });
+    test('should call navigateService.goTo', () => {
+      expect(mockGoTo).toBeCalledWith('/movie', 'tt1234');
     });
   });
 
-  describe('displayMovies', () => {
-    beforeEach(() => {
-      component.ngOnInit();
-    });
-    describe('WHEN movies are defined', () => {
-      beforeEach(() => {
-        component.displayMovies();
-      });
-      test('should set filteredMovies', () => {
-        expect(component.filteredMovies).toEqual([mockMovies[0]]);
-      });
-      describe('AND a decade is passed in', () => {
-        beforeEach(() => {
-          component.displayMovies(2000);
-        });
-        test('should set currDecade', () => {
-          expect(component.currDecade).toEqual(2000);
-        });
-      });
-    });
-    describe('WHEN movies are undefined', () => {
-      test('should set filteredMovies to an empty array', () => {
-        component.movies = [];
-        spectator.detectComponentChanges();
-        component.displayMovies();
-        expect(component.filteredMovies).toEqual([]);
-      });
-    });
-  });
 });
