@@ -7,7 +7,7 @@ import { of } from 'rxjs';
 
 const mockActivatedRoute = mockProvider(ActivatedRoute, {
   snapshot: {
-    paramMap: new Map([['id',1]])
+    paramMap: new Map([['id','tt123']])
   }
 });
 const mockDecades = [2000];
@@ -71,5 +71,15 @@ describe('MovieComponent', () => {
   test('should create the component', () => {
     component.ngOnInit();
     expect(component).toBeTruthy();
+  });
+
+  test('should set the id param from activated route', () => {
+    component.ngOnInit();
+    expect(component.movieId).toEqual('tt123');
+  });
+
+  test('should set the movie based on id', async() => {
+    component.ngOnInit();
+    expect(component.movie).toBe(mockMovies[0]);
   });
 });

@@ -1,12 +1,12 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { tap, first, Observable } from 'rxjs';
+import { Component, OnInit } from '@angular/core';
+import { tap, first } from 'rxjs';
 import { DataService, MovieComplete } from '../../../services/data.service';
 
 @Component({
   selector: 'app-movies',
   templateUrl: './movies.component.html'
 })
-export class MoviesComponent implements OnDestroy, OnInit {
+export class MoviesComponent implements OnInit {
   public currDecade: number | undefined;
   public decades: number[] = [];
   public filteredMovies: MovieComplete[] = [];
@@ -19,13 +19,10 @@ export class MoviesComponent implements OnDestroy, OnInit {
       first(),
       tap((data) => {
         this.decades = data.Decades;
-        this.movies = data.Movies;
+        this.movies = data.Search;
         this.displayMovies();
       })
     ).subscribe();
-  }
-
-  public ngOnDestroy(): void {
   }
 
   public displayMovies(decade?: number): void {
